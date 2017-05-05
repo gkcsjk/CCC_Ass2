@@ -1,10 +1,12 @@
 import couchdb
 import getopt
 import sys
+import NBTraining
 
 USERNAME = 'ccc'
 PASSWORD = 'cloud'
 server = couchdb.Server('http://ccc:cloud@localhost:5984/')
+classifier = NBTraining.generate_classifier()
 
 try:
     opts, args = getopt.getopt(sys.argv[1:], 'c:m:',['city=', 'model='])
@@ -18,5 +20,14 @@ for opt, arg in opts:
 
 db = server[city]
 
+index = 0
 for doc in db:
-    print doc["text"]
+    index += 1
+    if index%10 == 0:
+        print "processing doc{}".format(index)
+    doc = db[doc]
+    tweet = doc['text']
+    label = NBTraining.classify_tweet(tweet, classifier)
+    doc['lable_ccc'] = label
+    db.update(doc)
+

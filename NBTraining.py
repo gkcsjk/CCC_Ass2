@@ -1,10 +1,8 @@
-import time
 import preprocess
 import json
 from nltk.corpus import stopwords
 from sklearn.feature_extraction import DictVectorizer
-from sklearn.naive_bayes import MultinomialNB, BernoulliNB
-from sklearn.metrics import classification_report
+from sklearn.naive_bayes import MultinomialNB
 stop = stopwords.words('english')
 
 
@@ -70,24 +68,24 @@ def convert_to_feature_dicts(tweets, removeStopWords, n):
         feature_dicts.append(feature_dict)
     return feature_dicts
 
-dev_tweets, dev_labels = read_training_set("dev.json")
-train_tweets, train_lables = read_training_set("train.json")
 
-train_dict = convert_to_feature_dicts(train_tweets, True, 1)
-dev_dict = convert_to_feature_dicts(dev_tweets, False, 0)
-
-vectorizer = DictVectorizer()
-train_data = vectorizer.fit_transform(train_dict)
-dev_data = vectorizer.transform(dev_dict)
-
-print "start"
-start_time = time.time()
-mnb = MultinomialNB()
-bnb = BernoulliNB()
-mnb = mnb.fit(train_data, train_lables)
-bnb = bnb.fit(train_data, train_lables)
-print "training finished"
+def generate_classifier():
+    train_tweets, train_lables = read_training_set("train.json")
+    train_dict = convert_to_feature_dicts(train_tweets, True, 1)
+    vectorizer = DictVectorizer()
+    train_data = vectorizer.fit_transform(train_dict)
+    print "start training..."
+    mnb = MultinomialNB()
+    mnb = mnb.fit(train_data, train_lables)
+    print "training finished"
+    return mnb
 
 
-print classification_report(dev_labels, mnb.predict(dev_data))
-print classification_report(dev_labels, bnb.predict(dev_data))
+def classify_tweet(tweet, classifier):
+    tweets = []
+    tweets.append(tweet)
+    tweets = convert_to_feature_dicts(tweets, False, 0)
+    vvectorize = DictVectorizer()
+    data = vvectorize.fit_transform(tweets)
+    result = classifier.predict(data)
+    return result[0]

@@ -115,7 +115,6 @@ while 1:
         print("Downloaded {0} tweets".format(tweetCount))
         for tweet in new_tweets:
             data = tweet._json
-            print data
             doc = [data]
             db.update(doc)
             max_id = new_tweets[-1].id
