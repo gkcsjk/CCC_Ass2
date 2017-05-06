@@ -3,7 +3,8 @@ import json
 from nltk.corpus import stopwords
 from sklearn.feature_extraction import DictVectorizer
 from sklearn.naive_bayes import MultinomialNB
-stop = stopwords.words('english')
+
+stop = frozenset(stopwords.words('english'))
 
 
 def read_training_set(filename):
@@ -33,7 +34,7 @@ def remove_lessn(tweets, n):
     for tweet in tweets:
             for word in tweet:
                 if count_dict[word] < n:
-                    del word
+                    tweet.remove(word)
     return tweets
 
 
@@ -54,7 +55,7 @@ def remove_stopwords(tweets):
     for tweet in tweets:
         for word in tweet:
             if word in stop:
-                del word
+                tweet.remove(word)
     return tweets
 
 
@@ -71,7 +72,7 @@ def convert_to_feature_dicts(tweets, removeStopWords, n):
 
 def generate_classifier():
     train_tweets, train_lables = read_training_set("train.json")
-    train_dict = convert_to_feature_dicts(train_tweets, True, 1)
+    train_dict = convert_to_feature_dicts(train_tweets, False, 1)
     vectorizer = DictVectorizer()
     train_data = vectorizer.fit_transform(train_dict)
     print "start training..."

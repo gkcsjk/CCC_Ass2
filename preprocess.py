@@ -38,19 +38,19 @@ def lowercase_words(tweet):
 
 
 def remove_hashtags(tweet):
-    tweet = re.sub("#[^\s^\r^\n]*", "", tweet).strip()
-    return tweet
+    # tweet = re.sub("#[^\s^\r^\n]*", "", tweet).strip()
+    # return tweet
 
-    # hashtags = re.findall("#[^\s^\r^\n]*", tweet)
-    # hashtags_ans = ""
-    # if len(hashtags) == 0:
-    #     return tweet
-    #
-    # else:
-    #     tweet = re.sub("#[^\s^\r^\n]*", "", tweet).strip()
-    #     for hashtag in hashtags[:]:
-    #         hashtags_ans = hashtags_ans + " " + maxmatch(hashtag)
-    #     return tweet + hashtags_ans
+    hashtags = re.findall("#[^\s^\r^\n]*", tweet)
+    hashtags_ans = ""
+    if len(hashtags) == 0:
+        return tweet
+
+    else:
+        tweet = re.sub("#[^\s^\r^\n]*", "", tweet).strip()
+        for hashtag in hashtags[:]:
+            hashtags_ans = hashtags_ans + " " + maxmatch(hashtag)
+        return tweet + hashtags_ans
 
 
 def maxmatch(hashtag):
@@ -72,6 +72,8 @@ def maxmatch(hashtag):
 def tokenize_words(tweet):
     word_tokenizer = nltk.tokenize.regexp.WordPunctTokenizer()
     word_tokenizer = word_tokenizer.tokenize(tweet)
+    for i, word in enumerate(word_tokenizer):
+        word_tokenizer[i] = lemmatize(word)
     return word_tokenizer
 
 
