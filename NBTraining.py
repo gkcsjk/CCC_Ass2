@@ -78,14 +78,14 @@ def generate_classifier():
     mnb = MultinomialNB()
     mnb = mnb.fit(train_data, train_lables)
     print "training finished"
-    return mnb
+    return mnb, vectorizer
 
 
-def classify_tweet(tweet, classifier):
+def classify_tweet(tweet, vectorizer, classifier):
     tweets = []
+    tweet = preprocess.pre_process(tweet)
     tweets.append(tweet)
     tweets = convert_to_feature_dicts(tweets, False, 0)
-    vvectorize = DictVectorizer()
-    data = vvectorize.fit_transform(tweets)
+    data = vectorizer.transform(tweets)
     result = classifier.predict(data)
     return result[0]

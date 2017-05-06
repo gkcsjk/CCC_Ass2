@@ -12,7 +12,6 @@ def pre_process(tweet):
     tweet = lowercase_words(tweet)
     tweet = remove_hashtags(tweet)
     tweet = tokenize_words(tweet)
-
     return tweet
 
 
@@ -39,16 +38,19 @@ def lowercase_words(tweet):
 
 
 def remove_hashtags(tweet):
-    hashtags = re.findall("#[^\s^\r^\n]*", tweet)
-    hashtags_ans = ""
-    if len(hashtags) == 0:
-        return tweet
+    tweet = re.sub("#[^\s^\r^\n]*", "", tweet).strip()
+    return tweet
 
-    else:
-        tweet = re.sub("#[^\s^\r^\n]*", "", tweet).strip()
-        for hashtag in hashtags[:]:
-            hashtags_ans = hashtags_ans + " " + maxmatch(hashtag)
-        return tweet + hashtags_ans
+    # hashtags = re.findall("#[^\s^\r^\n]*", tweet)
+    # hashtags_ans = ""
+    # if len(hashtags) == 0:
+    #     return tweet
+    #
+    # else:
+    #     tweet = re.sub("#[^\s^\r^\n]*", "", tweet).strip()
+    #     for hashtag in hashtags[:]:
+    #         hashtags_ans = hashtags_ans + " " + maxmatch(hashtag)
+    #     return tweet + hashtags_ans
 
 
 def maxmatch(hashtag):
